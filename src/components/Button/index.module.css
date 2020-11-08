@@ -1,0 +1,35 @@
+.button {
+    width: 30%;
+    height: 8vh;
+    font-size: calc(1vw + 1vh);
+    background-color: white;
+    color: #009379;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    border: none;
+}
+
+.button:hover {
+    background-color: #1ca28a;
+    color: white;
+}
+
+.button:active {
+    background-color: #009379;
+}
+
+.button:focus {
+    outline: none;
+}
+
+.button[disabled] {
+    opacity: 0.5;
+    pointer-events: none;
+    user-select: none;
+}
+
+.primary {
+    background-color: #008981;
+    color: white;
+}

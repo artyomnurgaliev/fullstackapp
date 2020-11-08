@@ -1,0 +1,111 @@
+.objects{
+    padding-left: 10%;
+}
+
+.projects{
+    padding-right: 10%;
+    margin-top: 50px;
+}
+
+.header {
+    border-bottom: 1px solid black;
+    position: fixed;
+    top:0;
+    height: 50px;
+    background-color: white;
+    width: 81%;
+    display: flex;
+    flex-direction: row;
+}
+
+.search_input {
+    margin-top: 6px;
+    font-size: 20px;
+    color: #4BB2AC;
+    border: 3px solid #008981;
+    height: 26px;
+    font-family: 'Noto Sans Tamil';
+    border-radius: 7px;
+}
+
+.search_input.error {
+    border: 3px solid red;
+}
+
+.search_input:hover {
+    background-color: #c5c5c5;
+}
+
+.search_input:focus {
+    outline: none;
+
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #FBD1DC
+}
+
+.button{
+    margin-top: 6px;
+    border: none;
+    border-radius: 7px;
+    background-color: #008981;
+    color: white;
+    height: 34px;
+    margin-left: 10px;
+}
+
+.button:hover {
+    background-color: #1ca28a;
+    color: white;
+}
+
+.button:active {
+    background-color: #009379;
+}
+
+.button:focus {
+    outline: none;
+}
+
+.page_button {
+    margin-left: auto;
+    background-color: white;
+    border: none;
+    color: black;
+}
+
+.page_button:hover {
+    color: #1ca28a;
+}
+
+.page_button:active {
+    color: #009379;
+}
+
+.page_button:focus {
+    outline: none;
+}
+
+.primary {
+    color: #008981;
+}
+
+.projects_button {
+    background-color: white;
+    border: none;
+    color: black;
+}
+
+.projects_button:hover {
+    color: #1ca28a;
+}
+
+.projects_button:active {
+    color: #009379;
+}
+
+.projects_button:focus {
+    outline: none;
+}
+
+.primary {
+    color: #008981;
+}
