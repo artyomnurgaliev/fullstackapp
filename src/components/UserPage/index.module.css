@@ -109,3 +109,62 @@
 .primary {
     color: #008981;
 }
+.delimiter {
+    width: 70%;
+    margin-top: 20px;
+    font-size: 30px;
+}
+
+.main_info {
+    width: 70%;
+    display: flex;
+    flex-direction: row;
+}
+
+.username {
+    margin-top: 20px;
+    font-size: 30px;
+}
+.description {
+    margin-top: 10px;
+    font-size: 18px;
+}
+
+.photo {
+    margin-top: 20px;
+    height: min(20vh, 250px);
+}
+
+.info {
+    margin-top: 10px;
+    font-size: 18px;
+}
+.edit{
+    padding-top: 5px;
+    height: 30px;
+}
+.row{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.edit_button{
+    margin-right: auto;
+    border: none;
+    border-radius: 5px;
+    background-color: white;
+}
+
+.edit_button:hover {
+    background-color: lightgrey;
+    color: white;
+}
+
+.edit_button:active {
+    background-color: #009379;
+}
+
+.edit_button:focus {
+    outline: none;
+}

@@ -6,7 +6,7 @@ import {connect} from "react-redux";
 import { withRouter } from "react-router";
 import PropTypes from "prop-types";
 
-import {tologin, signup, resetError} from "../../actions/user";
+import {getUsersAction, loginAction, signupAction} from "../../actions/user";
 
 
 function isCorrectEmail(login) {
@@ -34,6 +34,7 @@ class SignUp extends React.Component {
         errorText: '',
         isSignUp: false
     };
+
     render() {
         let {
             login,
@@ -45,10 +46,6 @@ class SignUp extends React.Component {
             repeatPasswordError,
             isSignUp
         } = this.state;
-
-        if (errorText === '') {
-            errorText = this.props.error;
-        }
 
         if (!isSignUp) {
             return (
@@ -114,7 +111,6 @@ class SignUp extends React.Component {
 
     changeToSignUp = (event) =>{
         event.preventDefault();
-        this.props.resetError();
         this.setState({
             login: '',
             password: '',
@@ -129,7 +125,6 @@ class SignUp extends React.Component {
 
     changeToLogin = (event) =>{
         event.preventDefault();
-        this.props.resetError();
         this.setState({
             login: '',
             password: '',
@@ -144,21 +139,29 @@ class SignUp extends React.Component {
 
     onToLogin = (event) => {
         event.preventDefault();
-        const { match, location, history } = this.props;
         const {
             login,
             password
         } = this.state;
 
-        console.log('login', login);
-        console.log('password', password);
-
-        this.props.tologin(login, password, history);
+        this.props.login(login, password).then(() => {
+            this.props.history.push('/' + login);
+        }).catch((error) => {
+            this.setState({
+                login: '',
+                password: '',
+                repeatPassword: '',
+                loginError: false,
+                passwordError: false,
+                repeatPasswordError: false,
+                errorText: error.message,
+                isSignUp: false
+            });
+        });
     }
 
     onSignUp = (event) => {
         event.preventDefault();
-        const { match, location, history } = this.props;
 
         const {
             login,
@@ -193,10 +196,21 @@ class SignUp extends React.Component {
 
             return
         }
-        console.log('login', login);
-        console.log('password', password);
 
-        this.props.signup(login, password, history);
+        this.props.signup(login, password).then(() => {
+            this.props.history.push('/' + login);
+        }).catch((error) => {
+            this.setState({
+                login: '',
+                password: '',
+                repeatPassword: '',
+                loginError: false,
+                passwordError: false,
+                repeatPasswordError: false,
+                errorText: error.message,
+                isSignUp: true
+            });
+        });
     };
 
     onChangeLogin = (event) => {
@@ -222,21 +236,18 @@ class SignUp extends React.Component {
             errorText: ''
         })
     };
-
-
 }
 
 const mapStateToProps = (state) => {
     return {
-        error: state.userReducer.error
+        error: state.error
     }
-};
+}
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        signup: (login, password, history) => dispatch(signup(login, password, history)),
-        tologin: (login, password, history) => dispatch(tologin(login, password, history)),
-        resetError: () => dispatch(resetError())
+        signup: (...args) => dispatch(signupAction(...args)),
+        login: (...args) => dispatch(loginAction(...args)),
     }
 };
 

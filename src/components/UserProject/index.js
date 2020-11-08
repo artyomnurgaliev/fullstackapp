@@ -1,37 +1,46 @@
 import React from 'react';
 import styles from './index.module.css';
 import edit from '../../images/edit.png';
+import {connect} from "react-redux";
 
-export default function UserProject({name, description, access_level, pictures, logged_in}) {
+function UserProject(props) {
+    let editProject = (event) =>{
+        event.preventDefault();
+        const name = props.name;
+        const description = props.description;
+        const access_level = props.access_level;
+        const pictures = props.pictures;
+        props.dispatch({
+            type: 'EDITING_PROJECT',
+            project: {name, description, access_level, pictures}
+        });
+    }
+
     return (
         <div className={styles.project}>
             <div className={styles.row}>
                 <div className={styles.heading}>
                     <div className={styles.name}>
-                        {name}
+                        {props.name}
                     </div>
                     <div className={styles.access_level}>
-                        {access_level}
+                        {props.access_level}
                     </div>
 
                 </div>
                 <div>
-                    { logged_in && <button onClick={editProject} className={styles.button}><img className={styles.edit} src={edit}
+                    { props.logged_in && <button onClick={editProject} className={styles.button}><img className={styles.edit} src={edit}
                                                                                 alt="edit"/></button>}
                 </div>
             </div>
             <div className={styles.description}>
-                {description}
+                {props.description}
             </div>
             <div>
-                {pictures.map(picture => <img key={picture.id} src={picture.src} alt="" className={styles.image}/>)}
+                {props.pictures.map(picture => <img key={picture.id} src={picture.src} alt="" className={styles.image}/>)}
             </div>
         </div>
     );
-
-
 }
-let editProject = (event) =>{
-    event.preventDefault();
-    console.log('edit');
-}
+
+export default connect()(UserProject);

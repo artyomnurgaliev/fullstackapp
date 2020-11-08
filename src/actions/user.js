@@ -1,3 +1,4 @@
+/*
 export function tologin(login, password, history) {
   return {
     type: 'LOGIN',
@@ -21,60 +22,77 @@ export function resetError() {
   }
 }
 
-/*
-function fetchFail(payload) {
-  return {
-    type: 'USER_FAIL',
-    payload
-  }
-}
-
-function fetchSuccess(payload) {
-  return {
-    type: 'USER_SUCCESS',
-    payload
-  }
-}
-
 export function setUsers() {
   return {
     type: 'SET_USERS'
   }
 }
+*/
+
+import userService from '../userService/index';
+
+function fetchStart() {
+    console.log('action fetching');
+    return {
+        type: 'USER_FETCHING'
+    }
+}
+
+function fetchFail(payload) {
+    console.log('action fail');
+    return {
+        type: 'USER_FAIL',
+        payload
+    }
+}
+
+export function fetchSuccess(payload) {
+    console.log('action success');
+    return {
+        type: 'USER_SUCCESS',
+        payload
+    }
+}
+
 
 export function getUsersAction() {
-  return dispatch => {
-    let users = userService.getUsers();
-    dispatch(setUsers(users));
-  }
+    return dispatch => {
+        dispatch(fetchStart());
+        console.log('fetched');
+        return userService.getUsers().then((data) => {
+            console.log('got users in action', data);
+            dispatch(fetchSuccess(data));
+        })
+            .catch((error) => {
+                dispatch(fetchFail(error))
+                throw Error(error)
+            });
+    }
 }
 
 export function loginAction(login, password) {
-  return dispatch => {
-    try {
-      let user = userService.login(login, password);
-      dispatch(fetchSuccess(user));
-    } catch (err) {
-      console.log('error in login Action', err);
-      dispatch(fetchFail(err));
+    return dispatch => {
+        dispatch(fetchStart());
+        return userService.login(login, password).then((data) => {
+            dispatch(fetchSuccess(data));
+        })
+            .catch((error) => {
+                dispatch(fetchFail(error))
+                throw Error(error)
+            });
     }
-  }
 }
 
 export function signupAction(login, password) {
-  return dispatch => {
-    try {
-      let user = userService.signup(login, password);
-      dispatch(fetchSuccess(user));
-    } catch (err) {
-      dispatch(fetchFail(err));
+    return dispatch => {
+        dispatch(fetchStart());
+        return userService.signup(login, password).then((data) => {
+            dispatch(fetchSuccess(data));
+        })
+            .catch((error) => {
+                dispatch(fetchFail(error))
+                throw Error(error)
+            });
     }
-  }
 }
 
-export function logoutAction() {
-  return dispatch => {
-    userService.logout();
-    dispatch(fetchSuccess(null));
-  }
-}*/
