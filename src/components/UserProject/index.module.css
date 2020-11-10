@@ -10,7 +10,8 @@
 
 .heading{
     width: 100%;
-    padding: 8px 1%;
+    padding-left: 8px;
+    padding-top: 5px;
     display: flex;
     flex-direction: row;
 }
@@ -36,9 +37,9 @@
     font-family: Geneva, Arial, Helvetica, sans-serif;
 }
 
+
 .description{
-    text-indent: 10px;
-    padding: 5px 1% 20px;
+    padding: 1px 1% 1px;
     color: black;
     width: 100%;
     font-size: 20px;
@@ -47,8 +48,9 @@
 
 .image{
     height: min(30vh, 250px);
-    padding-left: 1%;
-    padding-right: 1%;
+    padding-left: 3px;
+    padding-top: 3px;
+    padding-right: 3px;
 }
 
 .button{

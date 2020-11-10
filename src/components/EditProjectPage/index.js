@@ -1,10 +1,12 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styles from './index.module.css';
 import {connect} from "react-redux";
+import ImageUpload from "../../uploadService";
+import {setProjectAction, deleteProjectAction} from "../../actions/user";
 
 function EditProjectPage(props) {
+    const [pictures, setPictures] = useState(props.data.pictures);
     let initial_name = props.data.name;
-    console.log('initial name', initial_name);
 
     let handleChange = event => {
         const key = event.target.name;
@@ -13,29 +15,20 @@ function EditProjectPage(props) {
 
     let editProject = event => {
         event.preventDefault();
-        const {name, access_level, description, pictures} = props.data;
-        console.log('deleting', props.data);
-        props.dispatch({
-            type: 'DELETE_PROJECT',
-            placeholder: initial_name
+        props.setProject(props.user, props.data, pictures, initial_name).then(() => {
+            props.endEditing();
         });
-
-        props.dispatch({
-            type: 'EDIT_PROJECT',
-            placeholder: {name, access_level, description, pictures}
-        })
     };
 
     let deleteProject = event => {
         event.preventDefault();
-        props.dispatch({
-            type: 'DELETE_PROJECT',
-            placeholder: initial_name
+
+        props.deleteProject(props.user, initial_name).then(() => {
+            props.endEditing();
         });
     };
 
     let created = (props.data.name !== '');
-    console.log('created', created);
 
     return (
         <div className={styles.project}>
@@ -43,22 +36,44 @@ function EditProjectPage(props) {
                 <div className={styles.heading}>
                     <div> Project Name </div>
                     <input className={styles.name} onChange={handleChange} name='name'
-                           placeholder={created ? '' : 'Название проекта'} defaultValue={props.data.name} />
+                          defaultValue={props.data.name} />
                    
                 </div>
                 <div> Description </div>
                 <textarea className={styles.description} onChange={handleChange} name='description'
-                          placeholder={created ? '' : 'Описание проекта'} defaultValue={props.data.description}/>
+                          defaultValue={props.data.description}/>
                 <div>
-                    <button onClick = {editProject} className={styles.button}>
+                    {pictures.map(picture => <img key={picture.id} src={picture.src} alt=""
+                                                        className={styles.image}/>)}
+                </div>
+
+                <ImageUpload pictures={pictures} setPictures = {setPictures} />
+                <div className={styles.footer}>
+                    <button onClick = {editProject} className={styles.submitButton}>
                         {created ? 'Изменить' : 'Добавить проект' }
                     </button>
-                    {created && <button onClick={deleteProject} className={styles.button}> Удалить </button>}
+                    {created && <button onClick={deleteProject} className={styles.submitButton}> Удалить </button>}
                 </div>
             </div>
         </div>
     );
 }
 
+const mapStateToProps = (state) => {
+    return {
+        user: state.userReducer.user,
+        project: state.userReducer.project
+    }
+}
 
-export default connect()(EditProjectPage);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setProject: (...args) => dispatch(setProjectAction(...args)),
+        deleteProject: (...args) => dispatch(deleteProjectAction(...args)),
+        endEditing: () => dispatch({
+            type: 'END_EDITING_PROJECT',
+        })
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditProjectPage);

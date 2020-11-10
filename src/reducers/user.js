@@ -1,23 +1,73 @@
-import User from '../userService/User';
-import userService from '../userService/index';
-
 let initialState = {
     error: null,
-    user: null,
     editing_project: false,
-    project_edition_error: false,
-    project: null
+    editing_main_page: false,
+    project: null,
+    main_page: true
 }
 
 const userReducer = (state = initialState, action) => {
     switch (action.type) {
+        case 'PROJECTS_SUCCESS':
+            return {
+                ...state,
+                isFetching: false,
+                search_projects: action.payload.projects
+            }
+
+        case 'SEARCH':
+            return {
+                ...state,
+                searching: true
+            }
+
+        case 'MAIN_PAGE':
+            return {
+                ...state,
+                main_page: true,
+                searching: false
+            }
+
+        case 'NOT_MAIN_PAGE':
+            return {
+                ...state,
+                main_page: false,
+                searching: false
+            }
+
         case 'EDITING_PROJECT':
             return {
                 ...state,
                 editing_project: true,
-                project: action.project
+                project: action.project,
+                logged: true
+            }
+        case 'END_EDITING_PROJECT':
+            return {
+                ...state,
+                editing_project: false,
+                project: null,
+                main_page: false,
+                logged: true
             }
 
+        case 'EDITING_USER':
+            console.log('DATA', action.data);
+            return {
+                ...state,
+                editing_main_page: true,
+                data: action.data,
+                logged: true
+            }
+        case 'END_EDITING_USER':
+            return {
+                ...state,
+                editing_main_page: false,
+                main_page: true,
+                logged: true
+            }
+
+        /*
         case 'DELETE_PROJECT': {
             const name = action.placeholder;
             let projects = state.user.Projects;
@@ -51,47 +101,40 @@ const userReducer = (state = initialState, action) => {
                     idx = index;
                 }
             });
-            if (idx !== -1) {
-                return {
-                    ...state,
-                    project_edition_error: true
-                }
-            }
-            projects.push({id: Date.now(), name, access_level, description, pictures});
+            projects[idx] = ({id: Date.now(), name, access_level, description, pictures});
             const new_user = new User(...state.user.Fields, projects);
+
+
             let new_users = state.users;
             new_users.set(state.user.Login, new_user);
             return {
                 ...state,
                 user: new_user,
-                users: new_users,
+                logged: true,
                 project: null,
                 editing_project: false
             }
-
+        */
         case 'USER_FETCHING':
-            console.log('fetching');
             return {
                 ...state,
                 error: null,
                 isFetching: true
             };
         case 'USER_FAIL':
-            console.log('fail');
             return {
                 ...state,
                 isFetching: false,
                 error: action.payload
             };
         case 'USER_SUCCESS':
-            console.log('success');
-            console.log('users', action.payload.users);
+            console.log('USER SUCCESS is logged', action.payload.logged);
             return {
                 ...state,
                 isFetching: false,
                 error: null,
                 user: action.payload.user,
-                users: action.payload.users
+                logged: action.payload.logged
             };
         /*
         case 'LOGIN': {

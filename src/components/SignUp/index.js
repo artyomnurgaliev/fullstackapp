@@ -1,12 +1,11 @@
 import React from 'react';
 import styles from './index.module.css';
-import Input from '../Input';
 import Button from '../Button';
 import {connect} from "react-redux";
 import { withRouter } from "react-router";
 import PropTypes from "prop-types";
 
-import {getUsersAction, loginAction, signupAction} from "../../actions/user";
+import { loginAction, signupAction} from "../../actions/user";
 
 
 function isCorrectEmail(login) {
@@ -41,9 +40,6 @@ class SignUp extends React.Component {
             password,
             repeatPassword,
             errorText,
-            loginError,
-            passwordError,
-            repeatPasswordError,
             isSignUp
         } = this.state;
 
@@ -52,17 +48,19 @@ class SignUp extends React.Component {
                 <form className={styles.wrapper}>
                     <div className={styles.inputs}>
                         <div className={styles.input_text}>Username</div>
-                        <Input name="login" type="login"
+                        <input name="login" type="login"
                                className={styles.input}
                                onChange={this.onChangeLogin}
+                               onKeyDown={this._handleKeyDown}
                                value={login}
-                               error={loginError}/>
+                               />
                         <div className={styles.input_text}>Password</div>
-                        <Input name="password" type="password"
+                        <input name="password" type="password"
                                className={styles.input}
                                onChange={this.onChangePassword}
+                               onKeyDown={this._handleKeyDown}
                                value={password}
-                               error={passwordError}/>
+                               />
                     </div>
 
                     <p className={styles.error_text}>{errorText}</p>
@@ -78,23 +76,23 @@ class SignUp extends React.Component {
                 <form className={styles.wrapper}>
                     <div className={styles.inputs}>
                         <div className={styles.input_text}>Username</div>
-                        <Input name="login" type="login"
+                        <input name="login" type="login"
                                className={styles.input}
                                onChange={this.onChangeLogin}
-                               value={login}
-                               error={loginError}/>
+                               onKeyDown={this._handleKeyDown}
+                               value={login}/>
                         <div className={styles.input_text}>Password</div>
-                        <Input name="password" type="password"
+                        <input name="password" type="password"
                                className={styles.input}
                                onChange={this.onChangePassword}
-                               value={password}
-                               error={passwordError}/>
+                               onKeyDown={this._handleKeyDown}
+                               value={password}/>
                         <div className={styles.input_text}>Repeat password</div>
-                        <Input name="repeatPassword" type="password"
+                        <input name="repeatPassword" type="password"
                                className={styles.input}
                                onChange={this.onChangeRepeatPassword}
-                               value={repeatPassword}
-                               error={repeatPasswordError}/>
+                               onKeyDown={this._handleKeyDown}
+                               value={repeatPassword}/>
                     </div>
 
                     <p className={styles.error_text}>{errorText}</p>
@@ -107,6 +105,12 @@ class SignUp extends React.Component {
             );
         }
 
+    }
+
+    _handleKeyDown = event => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+        }
     }
 
     changeToSignUp = (event) =>{
@@ -144,7 +148,10 @@ class SignUp extends React.Component {
             password
         } = this.state;
 
+        console.log('trying to login');
+
         this.props.login(login, password).then(() => {
+            console.log('logged in')
             this.props.history.push('/' + login);
         }).catch((error) => {
             this.setState({

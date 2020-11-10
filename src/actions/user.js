@@ -32,14 +32,12 @@ export function setUsers() {
 import userService from '../userService/index';
 
 function fetchStart() {
-    console.log('action fetching');
     return {
         type: 'USER_FETCHING'
     }
 }
 
 function fetchFail(payload) {
-    console.log('action fail');
     return {
         type: 'USER_FAIL',
         payload
@@ -47,20 +45,23 @@ function fetchFail(payload) {
 }
 
 export function fetchSuccess(payload) {
-    console.log('action success');
     return {
         type: 'USER_SUCCESS',
         payload
     }
 }
 
+export function fetchProjects(payload) {
+    return {
+        type: 'PROJECTS_SUCCESS',
+        payload
+    }
+}
 
-export function getUsersAction() {
+export function setProjectAction(user, project, pictures, init_name) {
     return dispatch => {
         dispatch(fetchStart());
-        console.log('fetched');
-        return userService.getUsers().then((data) => {
-            console.log('got users in action', data);
+        return userService.setProject(user, project, pictures, init_name).then((data) => {
             dispatch(fetchSuccess(data));
         })
             .catch((error) => {
@@ -69,6 +70,66 @@ export function getUsersAction() {
             });
     }
 }
+
+export function deleteProjectAction(user, project_name) {
+    return dispatch => {
+        dispatch(fetchStart());
+        return userService.deleteProject(user, project_name).then((data) => {
+            dispatch(fetchSuccess(data));
+        })
+            .catch((error) => {
+                dispatch(fetchFail(error))
+                throw Error(error)
+            });
+    }
+}
+
+
+export function setUserAction(user) {
+    return dispatch => {
+        dispatch(fetchStart());
+        return userService.setUser(user).then((data) => {
+            dispatch(fetchSuccess(data));
+        })
+            .catch((error) => {
+                dispatch(fetchFail(error))
+                throw Error(error)
+            });
+    }
+}
+
+
+export function getUserAction(login) {
+    return dispatch => {
+        dispatch(fetchStart());
+        return userService.getUser(login).then((data) => {
+            dispatch(fetchSuccess(data));
+        })
+            .catch((error) => {
+                dispatch(fetchFail(error))
+                throw Error(error)
+            });
+    }
+}
+
+export function getUserProjectAction(user, name) {
+    return dispatch => {
+        dispatch(fetchStart());
+        return userService.getUserProject(user, name).then((data) => {
+            dispatch(fetchProjects(data));
+        });
+    }
+}
+
+export function getProjectAction(name) {
+    return dispatch => {
+        dispatch(fetchStart());
+        return userService.getProject(name).then((data) => {
+            dispatch(fetchProjects(data));
+        });
+    }
+}
+
 
 export function loginAction(login, password) {
     return dispatch => {

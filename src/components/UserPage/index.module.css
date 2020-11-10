@@ -39,7 +39,7 @@
 .search_input:focus {
     outline: none;
 
-    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #FBD1DC
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px lightgrey;
 }
 
 .button{
@@ -110,7 +110,7 @@
     color: #008981;
 }
 .delimiter {
-    width: 70%;
+    width: 100%;
     margin-top: 20px;
     font-size: 30px;
 }
@@ -120,6 +120,17 @@
     display: flex;
     flex-direction: row;
 }
+.main {
+    margin-left: 20px;
+    width: 50%;
+}
+
+.add_phrase{
+    padding-top: 30px;
+    font-size: 30px;
+    color: grey;
+    font-family: Geneva, Arial, Helvetica, sans-serif;
+}
 
 .username {
     margin-top: 20px;
@@ -128,7 +139,10 @@
 .description {
     margin-top: 10px;
     font-size: 18px;
+    font-family: Geneva, Arial, Helvetica, sans-serif;
 }
+
+
 
 .photo {
     margin-top: 20px;

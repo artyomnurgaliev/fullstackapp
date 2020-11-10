@@ -2,21 +2,33 @@ import React from 'react';
 import styles from './index.module.css';
 import UserProject from '../UserProject';
 
-import Input from "../Input";
 import {connect} from "react-redux";
 import EditProjectPage from "../EditProjectPage";
 import classnames from "classnames";
 import edit from "../../images/edit.png";
+import EditMainPage from "../EditMainPage";
+import {getUserProjectAction} from "../../actions/user";
 
 class UserPage extends React.Component {
-
     state = {
-        this_user: this.props.users.get(this.props.location.pathname.substring(1)),
-        isMainPage: false
+        search_project: '',
     };
 
     render() {
+        let searching = this.props.searching;
+        let main_page = this.props.main_page;
+
+        let logged = this.props.logged;
+        let projects = (searching ? this.props.search_projects : this.props.user.Projects);
+        if (!projects) {
+            projects = [];
+        }
+        console.log('Projects', projects);
+        let info = this.props.user.Info;
+
         let editing_project = this.props.editing_project;
+        let editing_main_page = this.props.editing_main_page;
+
         let project = {
             name: '',
             access_level: 'public',
@@ -27,31 +39,45 @@ class UserPage extends React.Component {
         if (editing_project && this.props.project != null) {
             project = this.props.project;
         }
-        console.log('project', project);
 
-        let logged =  (this.props.user !== null && this.props.user.Login === this.state.this_user.Login);
-        let projects = this.state.this_user.Projects;
-        let info = this.state.this_user.Info;
+        let data = {
+            fullName: '',
+            description: '',
+            photo: null
+        }
+
+        if (editing_main_page && this.props.data != null) {
+            data = this.props.data;
+        }
 
         const pageClassName = classnames(styles.page_button, {
-            [styles.primary]: this.state.isMainPage
+            [styles.primary]: main_page
         });
         const projectsClassName = classnames(styles.projects_button, {
-            [styles.primary]: !(this.state.isMainPage)
+            [styles.primary]: !(main_page)
         });
+        let description = info[3];
+        if (description === '' && logged) {
+            description = 'Please, add a description'
+        }
+
         return (
             <div className={styles.objects}>
-                {!editing_project && <div>
+                {!editing_main_page && !editing_project && <div>
                     <header className={styles.header}>
-                        {!this.state.isMainPage &&
-                        <Input name="search" placeholder="Search" className={styles.search_input}/>}
-                        {logged && !this.state.isMainPage &&
+                        {!main_page &&
+                        <input name="search" placeholder="Search" className={styles.search_input}
+                               onChange={this._handleChange}
+                               onKeyDown={this._handleKeyDown}/>}
+                        {logged && !main_page &&
                         <button onClick={this.changeToNewProject} className={styles.button}> New project</button>}
 
                         <button onClick={this.changeToMainPage} className={pageClassName}> Главная</button>
                         <button onClick={this.changeToProjects} className={projectsClassName}> Проекты</button>
                     </header>
-                    {!this.state.isMainPage && <div className={styles.projects}>
+                    {!main_page && <div className={styles.projects}>
+                        {projects.length === 0 && logged && <div className={styles.add_phrase}>
+                            There are no projects here yet</div>}
                         {projects.filter(project => (logged || project.access_level === 'public')).map(project =>
                             <UserProject
                                 key={project.id}
@@ -63,7 +89,7 @@ class UserPage extends React.Component {
                         }
                     </div>} </div>}
 
-                {this.state.isMainPage &&
+                {!searching && !editing_main_page && main_page &&
                 <div className={styles.projects}>
                     <div className={styles.row}>
                         <div className={styles.delimiter}>
@@ -76,53 +102,95 @@ class UserPage extends React.Component {
                         </div>
                     </div>
                     <div className={styles.main_info}>
-                        <div>
+                        {info[4] && <img className={styles.photo} src={info[4]} alt="photo"/>}
+                        <div className={styles.main}>
                             <div className={styles.username}>{info[0]}</div>
-                            <div className={styles.description}>{info[3]}</div>
+                            <pre className={styles.description}>{description}</pre>
                         </div>
-                        <img className={styles.photo} src={info[4]}
-                             alt="photo"/>
                     </div>
-                    <div className={styles.info}> Почта: {info[1]}</div>
-                    <div className={styles.info}> Телефон: {info[2]}</div>
                 </div>}
-
-                {logged && editing_project && <EditProjectPage data = {project} />}
+                {!searching && logged && editing_main_page && <EditMainPage data={data}/>}
+                {!searching && logged && editing_project && <EditProjectPage data={project}/>}
             </div>
         );
     }
 
+    _handleKeyDown = event => {
+        if (event.key === 'Enter') {
+            console.log('search');
+            this.props.search();
+            this.props.getUserProject(this.props.user, this.state.search_project);
+        }
+    }
+
+    _handleChange = event => {
+        this.setState(
+            {
+                ...this.state,
+                search_project: event.target.value
+            });
+    };
+
     editMainPage = (event) => {
         event.preventDefault();
-        /// TODO
+        let info = this.props.user.Info;
+        const fullName = info[0];
+        const description = info[3];
+        const photo = info[4];
+        this.props.editingMainPage(fullName, description, photo);
     }
 
     changeToProjects = (event) => {
         event.preventDefault();
-        this.setState({...this.state, isMainPage: false});
+        this.props.notMainPage();
     }
 
     changeToMainPage = (event) => {
         event.preventDefault();
-        this.setState({...this.state, isMainPage: true});
+        this.props.mainPage();
     }
 
     changeToNewProject = (event) => {
         event.preventDefault();
-        this.props.dispatch({
-            type: 'EDITING_PROJECT',
-            project: null
-        });
+        this.props.editingProject();
     }
 }
 
 const mapStateToProps = (state) => {
     return {
+        data: state.userReducer.data,
+        searching: state.userReducer.searching,
         project: state.userReducer.project,
         editing_project: state.userReducer.editing_project,
+        editing_main_page: state.userReducer.editing_main_page,
         user: state.userReducer.user,
-        users: state.userReducer.users
+        logged: state.userReducer.logged,
+        main_page: state.userReducer.main_page,
+        search_projects: state.userReducer.search_projects
     }
 };
 
-export default connect(mapStateToProps)(UserPage);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        mainPage: () => dispatch({
+            type: 'MAIN_PAGE',
+        }),
+        notMainPage: () => dispatch({
+            type: 'NOT_MAIN_PAGE',
+        }),
+        editingProject: () => dispatch({
+            type: 'EDITING_PROJECT',
+            project: null
+        }),
+        editingMainPage: (fullName, description, photo) => dispatch({
+            type: 'EDITING_USER',
+            data: {fullName, description, photo}
+        }),
+        search: () => dispatch({
+            type: 'SEARCH'
+        }),
+        getUserProject: (...args) => dispatch(getUserProjectAction(...args))
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserPage);

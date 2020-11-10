@@ -1,5 +1,5 @@
 .wrapper {
-    width: 30%;
+    width: 20%;
     background-color: white;
     margin: 4vh 5%;
 }
@@ -7,7 +7,8 @@
 .buttons {
     display: flex;
     flex-direction: row;
-    margin: 12vh 5% 4vh;
+    padding-top: 30px;
+    padding-bottom: 20px;
     align-items: center;
     justify-content: center;
 }
@@ -16,7 +17,7 @@
 .input_text {
     padding: 2vh 1%;
     color: black;
-    font-size: calc(2vmin);
+    font-size: 15px;
     font-family: Geneva, Arial, Helvetica, sans-serif;
 }
 
@@ -51,5 +52,5 @@
 .input:focus {
     outline: none;
 
-    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #FBD1DC
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px lightgrey;
 }

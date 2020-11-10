@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './index.module.css';
 
-class ImageUpload extends React.Component {
+export default class ImageUpload extends React.Component {
     constructor(props) {
         super(props);
         this.state = {file: '',imagePreviewUrl: ''};
@@ -9,6 +9,12 @@ class ImageUpload extends React.Component {
 
     _handleSubmit(e) {
         e.preventDefault();
+        if (this.props.pictures) {
+            this.props.setPictures( [...this.props.pictures, {id: Date.now(), src: this.state.imagePreviewUrl}]);
+        }
+        if (this.props.setPhoto) {
+            this.props.setPhoto(this.state.imagePreviewUrl);
+        }
         console.log('handle uploading-', this.state.file);
     }
 
@@ -45,7 +51,7 @@ class ImageUpload extends React.Component {
                            onChange={(e)=>this._handleImageChange(e)} />
                     <button className={styles.submitButton}
                             type="submit"
-                            onClick={(e)=>this._handleSubmit(e)}>Upload Image</button>
+                            onClick={(e)=>this._handleSubmit(e)}>Добавить изображение</button>
                 </form>
                 <div className={styles.imgPreview}>
                     {$imagePreview}

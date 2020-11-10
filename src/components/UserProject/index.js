@@ -4,7 +4,7 @@ import edit from '../../images/edit.png';
 import {connect} from "react-redux";
 
 function UserProject(props) {
-    let editProject = (event) =>{
+    let editProject = (event) => {
         event.preventDefault();
         const name = props.name;
         const description = props.description;
@@ -29,15 +29,17 @@ function UserProject(props) {
 
                 </div>
                 <div>
-                    { props.logged_in && <button onClick={editProject} className={styles.button}><img className={styles.edit} src={edit}
-                                                                                alt="edit"/></button>}
+                    {props.logged_in &&
+                    <button onClick={editProject} className={styles.button}><img className={styles.edit} src={edit}
+                                                                                 alt="edit"/></button>}
                 </div>
             </div>
-            <div className={styles.description}>
-                {props.description}
-            </div>
+            <pre className={styles.description}>
+                    {props.description}
+            </pre>
             <div>
-                {props.pictures.map(picture => <img key={picture.id} src={picture.src} alt="" className={styles.image}/>)}
+                {props.pictures.map(picture => <img key={picture.id} src={picture.src} alt=""
+                                                    className={styles.image}/>)}
             </div>
         </div>
     );

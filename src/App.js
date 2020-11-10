@@ -1,15 +1,20 @@
-import SignupPage from './components/MainPage';
+import SignupPage from './components/InitPage';
 import UserPage from './components/UserPage';
 import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom'
 import {connect, Provider} from 'react-redux';
 import React from "react";
 import PrivateRoute from './components/PrivateRoute';
-import {getUsersAction} from "./actions/user";
+import {getUserAction} from "./actions/user";
 
 function App(props) {
-    props.getUsers().then(() => {
-        console.log('Got users');
-    });
+    console.log('in app');
+    if (!props.user) {
+        console.log('trying to get user');
+        let login = window.location.pathname.substring(1);
+        props.getUser(login).then(() => {
+            console.log('Got user');
+        }).catch((error) => {});
+    }
 
     return (
         <BrowserRouter>
@@ -23,12 +28,18 @@ function App(props) {
     );
 }
 
+const mapStateToProps = (state) => {
+    return {
+        user: state.userReducer.user
+    }
+}
+
 const mapDispatchToProps = (dispatch) => {
     return {
-        getUsers: () => dispatch(getUsersAction()),
+        getUser: (login) => dispatch(getUserAction(login)),
     }
 };
 
-const WrappedApp = connect(null, mapDispatchToProps)(App);
+const WrappedApp = connect(mapStateToProps, mapDispatchToProps)(App);
 
 export default WrappedApp;
