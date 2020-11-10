@@ -7,7 +7,6 @@ import PrivateRoute from './components/PrivateRoute';
 import {getUserAction} from "./actions/user";
 
 function App(props) {
-    console.log('in app');
     if (!props.user) {
         console.log('trying to get user');
         let login = window.location.pathname.substring(1);

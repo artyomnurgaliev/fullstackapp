@@ -67,3 +67,39 @@
     box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px lightgrey;
 }
 
+.page_button {
+    margin-left: auto;
+    background-color: white;
+    border: none;
+    color: #008981;
+}
+
+.page_button:hover {
+    color: #1ca28a;
+}
+
+.page_button:active {
+    color: #009379;
+}
+
+.page_button:focus {
+    outline: none;
+}
+
+.box {
+    height: 100vh;
+    border-top: black solid 1px;
+    background-color: white;
+}
+
+.projects{
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+.add_phrase{
+    padding-top: 30px;
+    font-size: 30px;
+    color: grey;
+    font-family: Geneva, Arial, Helvetica, sans-serif;
+}

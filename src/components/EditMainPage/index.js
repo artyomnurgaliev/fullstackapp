@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './index.module.css';
 import {connect} from "react-redux";
 import ImageUpload from "../../uploadService";
-import {setUserAction} from "../../actions/user";
+import {setUserInfoAction} from "../../actions/user";
 import User from "../../userService/User";
 import { useState } from 'react';
 
@@ -60,7 +60,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        setUser: (...args) => dispatch(setUserAction(...args)),
+        setUser: (...args) => dispatch(setUserInfoAction(...args)),
         endEditing: () => dispatch({
             type: 'END_EDITING_USER',
         })

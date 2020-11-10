@@ -1,5 +1,5 @@
 class User {
-    constructor(login, fullName, password, mail, phone, description, photo, projects) {
+    constructor(login, fullName, password, mail, phone, description, photo, projects, logged) {
         this.login = login;
         this.fullName = fullName;
         this.password = password;
@@ -8,10 +8,19 @@ class User {
         this.description = description;
         this.photo = photo
         this.projects = projects;
+        this.logged = logged;
     }
 
     get Login() {
         return this.login;
+    }
+
+    get Logged() {
+        return this.logged;
+    }
+
+    set Logged(logged) {
+        return this.logged = logged;
     }
 
     get Password() {

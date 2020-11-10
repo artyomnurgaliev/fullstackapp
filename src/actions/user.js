@@ -85,10 +85,10 @@ export function deleteProjectAction(user, project_name) {
 }
 
 
-export function setUserAction(user) {
+export function setUserInfoAction(user) {
     return dispatch => {
         dispatch(fetchStart());
-        return userService.setUser(user).then((data) => {
+        return userService.setUserInfo(user).then((data) => {
             dispatch(fetchSuccess(data));
         })
             .catch((error) => {
@@ -112,6 +112,7 @@ export function getUserAction(login) {
     }
 }
 
+
 export function getUserProjectAction(user, name) {
     return dispatch => {
         dispatch(fetchStart());
@@ -125,6 +126,7 @@ export function getProjectAction(name) {
     return dispatch => {
         dispatch(fetchStart());
         return userService.getProject(name).then((data) => {
+            console.log('projecs', data);
             dispatch(fetchProjects(data));
         });
     }
@@ -135,6 +137,19 @@ export function loginAction(login, password) {
     return dispatch => {
         dispatch(fetchStart());
         return userService.login(login, password).then((data) => {
+            dispatch(fetchSuccess(data));
+        })
+            .catch((error) => {
+                dispatch(fetchFail(error))
+                throw Error(error)
+            });
+    }
+}
+
+export function logoutAction(user) {
+    return dispatch => {
+        dispatch(fetchStart());
+        return userService.logout(user).then((data) => {
             dispatch(fetchSuccess(data));
         })
             .catch((error) => {

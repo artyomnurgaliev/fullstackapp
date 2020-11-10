@@ -7,9 +7,17 @@ import EditProjectPage from "../EditProjectPage";
 import classnames from "classnames";
 import edit from "../../images/edit.png";
 import EditMainPage from "../EditMainPage";
-import {getUserProjectAction} from "../../actions/user";
+import {getUserProjectAction, logoutAction} from "../../actions/user";
+import {withRouter} from "react-router";
+import PropTypes from "prop-types";
 
 class UserPage extends React.Component {
+    static propTypes = {
+        match: PropTypes.object.isRequired,
+        location: PropTypes.object.isRequired,
+        history: PropTypes.object.isRequired
+    }
+
     state = {
         search_project: '',
     };
@@ -18,11 +26,13 @@ class UserPage extends React.Component {
         let searching = this.props.searching;
         let main_page = this.props.main_page;
 
-        let logged = this.props.logged;
+        let logged = this.props.user.Logged;
         let projects = (searching ? this.props.search_projects : this.props.user.Projects);
         if (!projects) {
             projects = [];
         }
+        projects = projects.filter(project => (logged || project.access_level === 'public'));
+
         console.log('Projects', projects);
         let info = this.props.user.Info;
 
@@ -74,11 +84,12 @@ class UserPage extends React.Component {
 
                         <button onClick={this.changeToMainPage} className={pageClassName}> Главная</button>
                         <button onClick={this.changeToProjects} className={projectsClassName}> Проекты</button>
+                        {logged && <button onClick={this.logout} className={styles.projects_button}> Выйти</button>}
                     </header>
                     {!main_page && <div className={styles.projects}>
                         {projects.length === 0 && logged && <div className={styles.add_phrase}>
                             There are no projects here yet</div>}
-                        {projects.filter(project => (logged || project.access_level === 'public')).map(project =>
+                        {projects.map(project =>
                             <UserProject
                                 key={project.id}
                                 name={project.name}
@@ -113,6 +124,13 @@ class UserPage extends React.Component {
                 {!searching && logged && editing_project && <EditProjectPage data={project}/>}
             </div>
         );
+    }
+
+    logout = event => {
+        event.preventDefault();
+        this.props.logoutAction(this.props.user).then(() => {
+            this.props.history.push('/signup');
+        });
     }
 
     _handleKeyDown = event => {
@@ -164,7 +182,6 @@ const mapStateToProps = (state) => {
         editing_project: state.userReducer.editing_project,
         editing_main_page: state.userReducer.editing_main_page,
         user: state.userReducer.user,
-        logged: state.userReducer.logged,
         main_page: state.userReducer.main_page,
         search_projects: state.userReducer.search_projects
     }
@@ -189,8 +206,9 @@ const mapDispatchToProps = (dispatch) => {
         search: () => dispatch({
             type: 'SEARCH'
         }),
-        getUserProject: (...args) => dispatch(getUserProjectAction(...args))
+        getUserProject: (...args) => dispatch(getUserProjectAction(...args)),
+        logoutAction: (user) => dispatch(logoutAction(user))
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserPage);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UserPage));

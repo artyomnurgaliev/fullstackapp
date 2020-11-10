@@ -9,6 +9,7 @@ let initialState = {
 const userReducer = (state = initialState, action) => {
     switch (action.type) {
         case 'PROJECTS_SUCCESS':
+            console.log('procs',action.payload.projects);
             return {
                 ...state,
                 isFetching: false,
@@ -21,12 +22,25 @@ const userReducer = (state = initialState, action) => {
                 searching: true
             }
 
+        case 'MAIN_SEARCH':
+            return {
+                ...state,
+                main_searching: true
+            }
+
         case 'MAIN_PAGE':
             return {
                 ...state,
                 main_page: true,
                 searching: false
             }
+
+        case 'SIGN_UP_PAGE':
+            return {
+                ...state,
+                main_searching: false
+            }
+
 
         case 'NOT_MAIN_PAGE':
             return {
@@ -39,16 +53,14 @@ const userReducer = (state = initialState, action) => {
             return {
                 ...state,
                 editing_project: true,
-                project: action.project,
-                logged: true
+                project: action.project
             }
         case 'END_EDITING_PROJECT':
             return {
                 ...state,
                 editing_project: false,
                 project: null,
-                main_page: false,
-                logged: true
+                main_page: false
             }
 
         case 'EDITING_USER':
@@ -56,15 +68,13 @@ const userReducer = (state = initialState, action) => {
             return {
                 ...state,
                 editing_main_page: true,
-                data: action.data,
-                logged: true
+                data: action.data
             }
         case 'END_EDITING_USER':
             return {
                 ...state,
                 editing_main_page: false,
-                main_page: true,
-                logged: true
+                main_page: true
             }
 
         /*
@@ -133,8 +143,7 @@ const userReducer = (state = initialState, action) => {
                 ...state,
                 isFetching: false,
                 error: null,
-                user: action.payload.user,
-                logged: action.payload.logged
+                user: action.payload.user
             };
         /*
         case 'LOGIN': {

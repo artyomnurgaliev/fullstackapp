@@ -5,6 +5,9 @@ import ImageUpload from "../../uploadService";
 import {setProjectAction, deleteProjectAction} from "../../actions/user";
 
 function EditProjectPage(props) {
+
+    const [access_level, setAccessLevel] = useState(props.data.access_level);
+
     const [pictures, setPictures] = useState(props.data.pictures);
     let initial_name = props.data.name;
 
@@ -12,6 +15,12 @@ function EditProjectPage(props) {
         const key = event.target.name;
         props.data[key] = event.target.value;
     };
+
+    let changeAccessLevel = event => {
+        event.preventDefault();
+        setAccessLevel(access_level === 'public' ? 'private' : 'public')
+        props.data.access_level = (props.data.access_level === 'public' ? 'private' : 'public');
+    }
 
     let editProject = event => {
         event.preventDefault();
@@ -34,7 +43,12 @@ function EditProjectPage(props) {
         <div className={styles.project}>
             <div className={styles.box}>
                 <div className={styles.heading}>
-                    <div> Project Name </div>
+                    <div className={styles.row}>
+                        <div> Project Name </div>
+                        <button className={styles.private_button} onClick={changeAccessLevel}> {
+                            access_level === 'public' ? 'make private' : 'make public'
+                        }</button>
+                    </div>
                     <input className={styles.name} onChange={handleChange} name='name'
                           defaultValue={props.data.name} />
                    

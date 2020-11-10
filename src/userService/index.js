@@ -84,14 +84,19 @@ vk: vk.com/myvkpage
         access_level: 'private',
         description: 'my third project',
         pictures: []
-    }]);
-
-
+    },{
+        id: 4,
+        name: 'Second',
+        access_level: 'public',
+        description: description2,
+        pictures: pictures2
+    }], false);
 
 
 let users = new Map([
     ['artyomnurgaliev', artyom]
 ]);
+
 
 /*
 const UserService = {
@@ -138,10 +143,10 @@ async function toSignUp(login, password) {
     if (users.has(login)) {
         return reject("User with this login already exists");
     } else {
-        let new_user = new User(login, login, password, '', '', '', default_photo, []);
+        let new_user = new User(login, login, password, '', '', '', default_photo, [], true);
         users.set(login, new_user);
         console.log('users signup', users);
-        return resolve({user: users.get(login), logged: true});
+        return resolve({user: users.get(login)});
     }
 }
 
@@ -152,8 +157,9 @@ async function toLogin(login, password) {
         if (users.get(login).Password !== password) {
             return reject("Incorrect password");
         } else {
+            users.get(login).Logged = true;
             console.log('users', users);
-            return resolve({user: users.get(login), logged: true});
+            return resolve({user: users.get(login)});
         }
     }
 }
@@ -162,15 +168,16 @@ async function getUser(login) {
     if (!users.has(login)) {
         return reject("No user with such username");
     } else {
-        return resolve({user: users.get(login), logged: false});
+        return resolve({user: users.get(login)});
     }
 }
 
 async function getProject(name) {
-    console.log('wtf');
     let projects = [];
     users.forEach(function(user) {
         user.Projects.forEach(function (project) {
+            console.log('name', name);
+            console.log('project', project);
             if (project.name.toLowerCase().startsWith(name.toLowerCase())) {
                 projects.push(project);
             }
@@ -180,7 +187,6 @@ async function getProject(name) {
 }
 
 async function getUserProject(user, name) {
-    console.log('here');
     let projects = [];
     users.get(user.Login).Projects.forEach(function (project) {
         if (project.name.toLowerCase().startsWith(name.toLowerCase())) {
@@ -191,12 +197,21 @@ async function getUserProject(user, name) {
 }
 
 
-async function setUser(user) {
+async function setUserInfo(user) {
     if (!users.has(user.Login)) {
         return reject("No user with such username");
     } else {
         users.set(user.Login, user);
-        return resolve({user: users.get(user.Login), logged: true});
+        return resolve({user: users.get(user.Login)});
+    }
+}
+
+async function logout(user) {
+    if (!users.has(user.Login)) {
+        return reject("No user with such username");
+    } else {
+        users.get(user.Login).Logged = false;
+        return resolve({user: null});
     }
 }
 
@@ -221,7 +236,7 @@ async function setProject(user, project, pictures, init_name) {
         }
         const new_user = new User(...user.Fields, projects);
         users.set(user.Login, new_user);
-        return resolve({user: users.get(user.Login), logged: true});
+        return resolve({user: users.get(user.Login)});
     }
 }
 
@@ -242,7 +257,7 @@ async function deleteProject(user, project_name) {
         delete projects[idx];
         const new_user = new User(...user.Fields, projects);
         users.set(user.Login, new_user);
-        return resolve({user: users.get(user.Login), logged: true});
+        return resolve({user: users.get(user.Login)});
     }
 }
 
@@ -257,8 +272,8 @@ const UserService = {
     getUser(login) {
         return getUser(login);
     },
-    setUser(user) {
-        return setUser(user);
+    setUserInfo(user) {
+        return setUserInfo(user);
     },
     setProject(user, project, pictures, init_name) {
         return setProject(user, project, pictures, init_name);
@@ -271,6 +286,9 @@ const UserService = {
     },
     getProject(name) {
         return getProject(name);
+    },
+    logout(user) {
+        return logout(user);
     }
 };
 

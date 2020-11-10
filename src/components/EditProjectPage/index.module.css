@@ -67,6 +67,15 @@
     background: #efefef;
 }
 
+.private_button {
+    margin-left: auto;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
 .footer {
     padding-bottom: 20px;
 }
