@@ -3,12 +3,14 @@ import styles from './index.module.css';
 import {connect} from "react-redux";
 import ImageUpload from "../../uploadService";
 import {setProjectAction, deleteProjectAction} from "../../actions/user";
+import delete_img from "../../images/delete.png";
+import DeleteButton from "../DeleteButton";
 
 function EditProjectPage(props) {
 
     const [access_level, setAccessLevel] = useState(props.data.access_level);
 
-    const [pictures, setPictures] = useState(props.data.pictures);
+    let [pictures, setPictures] = useState(props.data.pictures);
     let initial_name = props.data.name;
 
     let handleChange = event => {
@@ -24,6 +26,10 @@ function EditProjectPage(props) {
 
     let editProject = event => {
         event.preventDefault();
+        if (props.data.name === '' || !props.data.name) {
+            props.data.name = '' + Date.now();
+        }
+
         props.setProject(props.user, props.data, pictures, initial_name).then(() => {
             props.endEditing();
         });
@@ -36,6 +42,8 @@ function EditProjectPage(props) {
             props.endEditing();
         });
     };
+
+
 
     let created = (props.data.name !== '');
 
@@ -57,8 +65,11 @@ function EditProjectPage(props) {
                 <textarea className={styles.description} onChange={handleChange} name='description'
                           defaultValue={props.data.description}/>
                 <div>
-                    {pictures.map(picture => <img key={picture.id} src={picture.src} alt=""
-                                                        className={styles.image}/>)}
+                    {pictures.map(picture =>
+                        <div className={styles.row}>
+                            <img key={picture.id} src={picture.src} alt="" className={styles.image}/>
+                            <DeleteButton pictures={pictures} setPictures={setPictures} picture_id={picture.id} />
+                        </div>)}
                 </div>
 
                 <ImageUpload pictures={pictures} setPictures = {setPictures} />
