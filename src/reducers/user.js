@@ -138,7 +138,7 @@ const userReducer = (state = initialState, action) => {
                 error: action.payload
             };
         case 'USER_SUCCESS':
-            console.log('USER SUCCESS is logged', action.payload.logged);
+            console.log('USER SUCCESS is logged', action.payload);
             return {
                 ...state,
                 isFetching: false,

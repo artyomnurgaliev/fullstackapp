@@ -1,6 +1,8 @@
 import logo from '../images/photo1.jpeg';
 import auto from '../images/auto.jpg';
 
+import axios from 'axios';
+
 import photo1 from '../images/photo1.jpeg';
 import photo2 from '../images/photo2.jpeg';
 import photo3 from '../images/photo3.jpeg';
@@ -96,7 +98,7 @@ vk: vk.com/myvkpage
         access_level: 'private',
         description: 'my third project',
         pictures: []
-    },{
+    }, {
         id: 4,
         name: 'Second',
         access_level: 'public',
@@ -111,13 +113,17 @@ let users = new Map([
 
 function resolve(x) {
     return new Promise(resolve => {
-        setTimeout(() => { resolve(x); }, 1);
+        setTimeout(() => {
+            resolve(x);
+        }, 1);
     });
 }
 
 function reject(error) {
     return new Promise((resolve, reject) => {
-        setTimeout(() => { reject(error); }, 1);
+        setTimeout(() => {
+            reject(error);
+        }, 1);
     });
 }
 
@@ -156,7 +162,7 @@ async function getUser(login) {
 
 async function getProject(name) {
     let projects = [];
-    users.forEach(function(user) {
+    users.forEach(function (user) {
         user.Projects.forEach(function (project) {
             console.log('name', name);
             console.log('project', project);
@@ -243,15 +249,23 @@ async function deleteProject(user, project_name) {
     }
 }
 
+const USER_API_BASE_URL = "http://localhost:8080/api/v1/users"
 
 const UserService = {
     signup(login, password) {
+        const user = axios.get(USER_API_BASE_URL + '/login', {params: {login: login, password: password}});
+        console.log(user);
         return toSignUp(login, password);
     },
     login(email, password) {
+        const user = axios.get(USER_API_BASE_URL + '/signup', {params: {login: login, password: password}});
+        console.log(user);
         return toLogin(email, password);
+
     },
     getUser(login) {
+        const user = axios.get(USER_API_BASE_URL + '/', {params: {login: login}});
+        console.log(user);
         return getUser(login);
     },
     setUserInfo(user) {
@@ -272,7 +286,7 @@ const UserService = {
     logout(user) {
         return logout(user);
     }
-};
+}
 
 export default UserService;
 
