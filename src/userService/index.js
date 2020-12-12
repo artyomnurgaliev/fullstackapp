@@ -61,8 +61,6 @@ let description2 =
 let artyom = new User('artyomnurgaliev',
     'Artyom Nurgaliev',
     'password',
-    'artyomnurgaliev@mail.ru',
-    '8899998989',
     `Very interesting personalities, very enjoyable spent of time
 boyz Разнообразный и богатый опыт консультация с широким активом
 обеспечивает широкому кругу. Идейные соображения высшего порядк
@@ -253,38 +251,99 @@ const USER_API_BASE_URL = "http://localhost:8080/api/v1/users"
 
 const UserService = {
     signup(login, password) {
-        const user = axios.get(USER_API_BASE_URL + '/login', {params: {login: login, password: password}});
-        console.log(user);
-        return toSignUp(login, password);
+        let new_user = new User(login, login, password,  '', default_photo, [], true);
+        const user = axios.put(USER_API_BASE_URL + '/signup', new_user.Serialization, {params: {login: login}});
+        return user.then(user => {
+            let new_user = new User();
+            new_user.init = user['data'];
+            new_user.Logged = true;
+            return {user: new_user};
+        });
     },
     login(email, password) {
-        const user = axios.get(USER_API_BASE_URL + '/signup', {params: {login: login, password: password}});
-        console.log(user);
-        return toLogin(email, password);
-
+        const user = axios.get(USER_API_BASE_URL + '/login', {params: {login: email, password: password}});
+        return user.then(user => {
+            let new_user = new User();
+            new_user.init = user['data'];
+            new_user.Logged = true;
+            return {user: new_user};
+        });
     },
     getUser(login) {
-        const user = axios.get(USER_API_BASE_URL + '/', {params: {login: login}});
-        console.log(user);
-        return getUser(login);
+        const user = axios.get(USER_API_BASE_URL + '/get_user', {params: {login: login}});
+        return user.then(user => {
+            let new_user = new User();
+            new_user.init = user['data'];
+            new_user.Logged = false
+            return {user: new_user};
+        });
     },
     setUserInfo(user) {
-        return setUserInfo(user);
+        const res = axios.put(USER_API_BASE_URL + '/update', user.Serialization,
+            {params: {login: user.Login,
+                password: user.Password}});
+        return res.then(user => {
+            let new_user = new User();
+            new_user.init = user['data'];
+            new_user.Logged = true;
+            return {user: new_user};
+        });
     },
-    setProject(user, project, pictures, init_name) {
-        return setProject(user, project, pictures, init_name);
+    updateProject(user, project, pictures, init_name) {
+        const {name, access_level, description} = project;
+        const res = axios.put(USER_API_BASE_URL + '/update_project',
+            {name: name, access_level: access_level,
+            description: description, pictures: pictures},
+            {params: {login: user.Login, password: user.Password,
+                initial_project_name: init_name,}});
+        return res.then(user => {
+            let new_user = new User();
+            new_user.init = user['data'];
+            new_user.Logged = true;
+            return {user: new_user};
+        });
+    },
+    addProject(user, project, pictures) {
+        console.log("ADDING PROJECT")
+        const {name, access_level, description} = project;
+        const res = axios.put(USER_API_BASE_URL + '/add_project',
+            {name: name, access_level: access_level,
+                description: description, pictures: pictures},
+            {params: {login: user.Login, password: user.Password}});
+        return res.then(user => {
+            let new_user = new User();
+            new_user.init = user['data'];
+            new_user.Logged = true;
+            return {user: new_user};
+        });
     },
     deleteProject(user, project_name) {
-        return deleteProject(user, project_name);
+        const res = axios.get(USER_API_BASE_URL + '/delete_project',
+            {params: {login: user.Login, password: user.Password, projectName: project_name}});
+        return res.then(user => {
+            let new_user = new User();
+            new_user.init = user['data'];
+            new_user.Logged = true;
+            return {user: new_user};
+        });
     },
     getUserProject(user, name) {
-        return getUserProject(user, name);
+        const res = axios.get(USER_API_BASE_URL + '/get_user_project',
+            {params: {login: user.Login, password: user.Password, name: name}});
+
+        return res.then(projects => {
+            return {projects: projects['data']}
+        });
     },
     getProject(name) {
-        return getProject(name);
+        const res = axios.get(USER_API_BASE_URL + '/get_project',
+            {params: {name: name}});
+        return res.then(projects => {
+            return {projects: projects['data']}
+        });
     },
     logout(user) {
-        return logout(user);
+        return resolve({user: null});
     }
 }
 

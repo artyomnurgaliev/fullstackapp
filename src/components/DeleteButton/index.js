@@ -6,7 +6,6 @@ export default function DeleteButton({pictures, setPictures, picture_id}) {
 
     let deletePicture = event => {
         event.preventDefault();
-        console.log('deleting picture with id', picture_id);
         setPictures(pictures.filter(picture => (picture.id !== picture_id)));
     }
 

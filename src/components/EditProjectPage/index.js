@@ -2,18 +2,18 @@ import React, {useState} from 'react';
 import styles from './index.module.css';
 import {connect} from "react-redux";
 import ImageUpload from "../../uploadService";
-import {setProjectAction, deleteProjectAction} from "../../actions/user";
-import delete_img from "../../images/delete.png";
+import {updateProjectAction, deleteProjectAction, addProjectAction} from "../../actions/user";
 import DeleteButton from "../DeleteButton";
 
 function EditProjectPage(props) {
 
     const [access_level, setAccessLevel] = useState(props.data.access_level);
+    const [error, setError] = useState("")
 
     let [pictures, setPictures] = useState(props.data.pictures);
-    let initial_name = props.data.name;
-
+    let initial_name = props.data.name
     let handleChange = event => {
+        setError("")
         const key = event.target.name;
         props.data[key] = event.target.value;
     };
@@ -26,13 +26,24 @@ function EditProjectPage(props) {
 
     let editProject = event => {
         event.preventDefault();
-        if (props.data.name === '' || !props.data.name) {
-            props.data.name = '' + Date.now();
-        }
+        const created = event.target.getAttribute('data-arg1');
+        let pics = Array.from(pictures.values())
+        if (!pics)
+            pics = []
 
-        props.setProject(props.user, props.data, pictures, initial_name).then(() => {
-            props.endEditing();
-        });
+        if (props.data.name.length == 0) {
+            setError("Project name can't be empty")
+        } else {
+            if (created === 'false') {
+                props.addProject(props.user, props.data, pics).then(() => {
+                    props.endEditing();
+                }).catch((error)=>{});
+            } else {
+                props.updateProject(props.user, props.data, pics, initial_name).then(() => {
+                    props.endEditing();
+                }).catch((error)=>{});
+            }
+        }
     };
 
     let deleteProject = event => {
@@ -43,9 +54,8 @@ function EditProjectPage(props) {
         });
     };
 
-
-
-    let created = (props.data.name !== '');
+    let created = props.created;
+    let is_error = (error.length !== 0);
 
     return (
         <div className={styles.project}>
@@ -57,9 +67,10 @@ function EditProjectPage(props) {
                             access_level === 'public' ? 'make private' : 'make public'
                         }</button>
                     </div>
+                    { is_error && <p className={styles.error_text}>{error}</p>}
                     <input className={styles.name} onChange={handleChange} name='name'
                           defaultValue={props.data.name} />
-                   
+
                 </div>
                 <div> Description </div>
                 <textarea className={styles.description} onChange={handleChange} name='description'
@@ -74,7 +85,7 @@ function EditProjectPage(props) {
 
                 <ImageUpload pictures={pictures} setPictures = {setPictures} />
                 <div className={styles.footer}>
-                    <button onClick = {editProject} className={styles.submitButton}>
+                    <button onClick = {editProject} data-arg1={created} className={styles.submitButton}>
                         {created ? 'Изменить' : 'Добавить проект' }
                     </button>
                     {created && <button onClick={deleteProject} className={styles.submitButton}> Удалить </button>}
@@ -87,16 +98,18 @@ function EditProjectPage(props) {
 const mapStateToProps = (state) => {
     return {
         user: state.userReducer.user,
-        project: state.userReducer.project
+        project: state.userReducer.project,
+        errorMessage: state.userReducer.error
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        setProject: (...args) => dispatch(setProjectAction(...args)),
+        addProject: (...args) => dispatch(addProjectAction(...args)),
+        updateProject: (...args) => dispatch(updateProjectAction(...args)),
         deleteProject: (...args) => dispatch(deleteProjectAction(...args)),
         endEditing: () => dispatch({
-            type: 'END_EDITING_PROJECT',
+            type: 'END_EDITING_PROJECT'
         })
     }
 };

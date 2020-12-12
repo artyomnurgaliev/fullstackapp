@@ -32,8 +32,6 @@ class UserPage extends React.Component {
             projects = [];
         }
         projects = projects.filter(project => (logged || project.access_level === 'public'));
-
-        console.log('Projects', projects);
         let info = this.props.user.Info;
 
         let editing_project = this.props.editing_project;
@@ -66,7 +64,7 @@ class UserPage extends React.Component {
         const projectsClassName = classnames(styles.projects_button, {
             [styles.primary]: !(main_page)
         });
-        let description = info[3];
+        let description = info[1];
         if (description === '' && logged) {
             description = 'Please, add a description'
         }
@@ -79,7 +77,7 @@ class UserPage extends React.Component {
                         <input name="search" placeholder="Search" className={styles.search_input}
                                onChange={this._handleChange}
                                onKeyDown={this._handleKeyDown}/>}
-                        {logged && !main_page &&
+                        {!searching && logged && !main_page &&
                         <button onClick={this.changeToNewProject} className={styles.button}> New project</button>}
 
                         <button onClick={this.changeToMainPage} className={pageClassName}> Главная</button>
@@ -113,7 +111,7 @@ class UserPage extends React.Component {
                         </div>
                     </div>
                     <div className={styles.main_info}>
-                        {info[4] && <img className={styles.photo} src={info[4]} alt="photo"/>}
+                        {info[2] && <img className={styles.photo} src={info[2]} alt="photo"/>}
                         <div className={styles.main}>
                             <div className={styles.username}>{info[0]}</div>
                             <pre className={styles.description}>{description}</pre>
@@ -121,7 +119,7 @@ class UserPage extends React.Component {
                     </div>
                 </div>}
                 {!searching && logged && editing_main_page && <EditMainPage data={data}/>}
-                {!searching && logged && editing_project && <EditProjectPage data={project}/>}
+                {!searching && logged && editing_project && <EditProjectPage data={project} created={project.name !== ''}/>}
             </div>
         );
     }
@@ -135,7 +133,6 @@ class UserPage extends React.Component {
 
     _handleKeyDown = event => {
         if (event.key === 'Enter') {
-            console.log('search');
             this.props.search();
             this.props.getUserProject(this.props.user, this.state.search_project);
         }
@@ -153,8 +150,8 @@ class UserPage extends React.Component {
         event.preventDefault();
         let info = this.props.user.Info;
         const fullName = info[0];
-        const description = info[3];
-        const photo = info[4];
+        const description = info[1];
+        const photo = info[2];
         this.props.editingMainPage(fullName, description, photo);
     }
 

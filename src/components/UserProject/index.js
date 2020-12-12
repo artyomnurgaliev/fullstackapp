@@ -9,11 +9,17 @@ function UserProject(props) {
         const name = props.name;
         const description = props.description;
         const access_level = props.access_level;
-        const pictures = props.pictures;
+        const pictures = props.pictures ? props.pictures : [];
+
         props.dispatch({
             type: 'EDITING_PROJECT',
             project: {name, description, access_level, pictures}
         });
+    }
+
+    let pictures = props.pictures
+    if (!pictures) {
+        pictures = []
     }
 
     return (
@@ -38,7 +44,7 @@ function UserProject(props) {
                     {props.description}
             </pre>
             <div>
-                {props.pictures.map(picture => <img key={picture.id} src={picture.src} alt=""
+                {pictures.map(picture => <img key={picture.id} src={picture.src} alt=""
                                                     className={styles.image}/>)}
             </div>
         </div>

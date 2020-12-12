@@ -1,14 +1,37 @@
+import default_photo from '../images/default.png';
+
 class User {
-    constructor(login, fullName, password, mail, phone, description, photo, projects, logged) {
-        this.login = login;
-        this.fullName = fullName;
-        this.password = password;
-        this.mail = mail;
-        this.phone = phone;
-        this.description = description;
-        this.photo = photo
-        this.projects = projects;
-        this.logged = logged;
+    constructor(login = "",
+                fullName = "",
+                password = "",
+                description = "",
+                photo = null,
+                projects = null,
+                logged = false) {
+        this.login = login ? login : "";
+        this.fullName = fullName ? fullName : "";
+        this.password = password ? password : "";
+        this.description = description ? description : "";
+        this.photo = photo ? photo : default_photo;
+        this.projects = projects ? projects : null;
+        this.logged = logged ? logged : false
+    }
+
+    set init(data) {
+        this.password = data['password'] ? data['password']: "";
+        this.login = data['login'] ? data['login']: "";
+        this.fullName = data['fullname'] ? data['fullname']: "";
+        this.description = data['description'] ? data['description']: "";
+        this.photo = data['photo'] ? data['photo']: default_photo;
+        this.projects = data['projects'] ? data['projects']: [];
+    }
+
+    get Serialization() {
+        console.log("PHOTOOOO", this.photo)
+
+        return {login: this.login, fullname: this.fullName,
+            password: this.password, description: this.description,
+            photo: this.photo, projects: this.projects};
     }
 
     get Login() {
@@ -28,15 +51,13 @@ class User {
     }
 
     get Info() {
-        return [this.fullName, this.mail, this.phone, this.description, this.photo];
+        return [this.fullName, this.description, this.photo];
     }
 
     get Fields() {
         return [this.login,
             this.fullName,
             this.password,
-            this.mail,
-            this.phone,
             this.description,
             this.photo,
             this.projects]

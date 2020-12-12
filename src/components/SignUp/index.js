@@ -148,10 +148,7 @@ class SignUp extends React.Component {
             password
         } = this.state;
 
-        console.log('trying to login');
-
         this.props.login(login, password).then(() => {
-            console.log('logged in')
             this.props.history.push('/' + login);
         }).catch((error) => {
             this.setState({
@@ -161,7 +158,7 @@ class SignUp extends React.Component {
                 loginError: false,
                 passwordError: false,
                 repeatPasswordError: false,
-                errorText: error.message,
+                errorText: this.props.errorMessage,
                 isSignUp: false
             });
         });
@@ -214,7 +211,7 @@ class SignUp extends React.Component {
                 loginError: false,
                 passwordError: false,
                 repeatPasswordError: false,
-                errorText: error.message,
+                errorText: this.props.errorMessage,
                 isSignUp: true
             });
         });
@@ -247,7 +244,7 @@ class SignUp extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        error: state.error
+        errorMessage: state.userReducer.error
     }
 }
 

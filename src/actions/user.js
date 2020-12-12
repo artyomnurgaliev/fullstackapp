@@ -58,18 +58,32 @@ export function fetchProjects(payload) {
     }
 }
 
-export function setProjectAction(user, project, pictures, init_name) {
+export function updateProjectAction(user, project, pictures, init_name) {
     return dispatch => {
         dispatch(fetchStart());
-        return userService.setProject(user, project, pictures, init_name).then((data) => {
+        return userService.updateProject(user, project, pictures, init_name).then((data) => {
             dispatch(fetchSuccess(data));
         })
             .catch((error) => {
-                dispatch(fetchFail(error))
+                dispatch(fetchFail(error.response.data.message))
                 throw Error(error)
             });
     }
 }
+
+export function addProjectAction(user, project, pictures) {
+    return dispatch => {
+        dispatch(fetchStart());
+        return userService.addProject(user, project, pictures).then((data) => {
+            dispatch(fetchSuccess(data));
+        })
+            .catch((error) => {
+                dispatch(fetchFail(error.response.data.message))
+                throw Error(error)
+            });
+    }
+}
+
 
 export function deleteProjectAction(user, project_name) {
     return dispatch => {
@@ -78,7 +92,7 @@ export function deleteProjectAction(user, project_name) {
             dispatch(fetchSuccess(data));
         })
             .catch((error) => {
-                dispatch(fetchFail(error))
+                dispatch(fetchFail(error.response.data.message))
                 throw Error(error)
             });
     }
@@ -92,7 +106,7 @@ export function setUserInfoAction(user) {
             dispatch(fetchSuccess(data));
         })
             .catch((error) => {
-                dispatch(fetchFail(error))
+                dispatch(fetchFail(error.response.data.message))
                 throw Error(error)
             });
     }
@@ -106,7 +120,7 @@ export function getUserAction(login) {
             dispatch(fetchSuccess(data));
         })
             .catch((error) => {
-                dispatch(fetchFail(error))
+                dispatch(fetchFail(error.response.data.message))
                 throw Error(error)
             });
     }
@@ -126,7 +140,6 @@ export function getProjectAction(name) {
     return dispatch => {
         dispatch(fetchStart());
         return userService.getProject(name).then((data) => {
-            console.log('projecs', data);
             dispatch(fetchProjects(data));
         });
     }
@@ -140,8 +153,8 @@ export function loginAction(login, password) {
             dispatch(fetchSuccess(data));
         })
             .catch((error) => {
-                dispatch(fetchFail(error))
-                throw Error(error)
+                dispatch(fetchFail(error.response.data.message));
+                throw Error(error);
             });
     }
 }
@@ -153,7 +166,7 @@ export function logoutAction(user) {
             dispatch(fetchSuccess(data));
         })
             .catch((error) => {
-                dispatch(fetchFail(error))
+                dispatch(fetchFail(error.response.data.message))
                 throw Error(error)
             });
     }
@@ -166,7 +179,7 @@ export function signupAction(login, password) {
             dispatch(fetchSuccess(data));
         })
             .catch((error) => {
-                dispatch(fetchFail(error))
+                dispatch(fetchFail(error.response.data.message))
                 throw Error(error)
             });
     }

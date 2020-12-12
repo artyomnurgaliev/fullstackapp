@@ -15,7 +15,6 @@ export default class ImageUpload extends React.Component {
         if (this.props.setPhoto) {
             this.props.setPhoto(this.state.imagePreviewUrl);
         }
-        console.log('handle uploading-', this.state.file);
     }
 
     _handleImageChange(e) {
@@ -30,7 +29,6 @@ export default class ImageUpload extends React.Component {
                 imagePreviewUrl: reader.result
             });
         }
-
         reader.readAsDataURL(file)
     }
 
@@ -48,6 +46,7 @@ export default class ImageUpload extends React.Component {
                 <form onSubmit={(e)=>this._handleSubmit(e)}>
                     <input className={styles.fileInput}
                            type="file"
+                           accept=".png, .jpg, .jpeg"
                            onChange={(e)=>this._handleImageChange(e)} />
                     <button className={styles.submitButton}
                             type="submit"

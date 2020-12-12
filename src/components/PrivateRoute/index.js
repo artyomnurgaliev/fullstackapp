@@ -5,13 +5,10 @@ import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom'
 import {withRouter} from "react-router";
 
 function PrivateRoute(props) {
-    console.log('In Router');
     const {user, loading, ...rest} = props;
     if (loading) {
         return (<h1>LOADING...</h1>);
     }
-    console.log('user', user);
-    console.log('path', props.location.pathname);
     if (!user) {
         return <Redirect
             to={{
