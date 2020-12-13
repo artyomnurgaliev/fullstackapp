@@ -247,7 +247,7 @@ async function deleteProject(user, project_name) {
     }
 }
 
-const USER_API_BASE_URL = "http://localhost:8080/api/v1/users"
+const USER_API_BASE_URL = "https://achievehubbackendv1.herokuapp.com/api/v1/users"
 
 const UserService = {
     signup(login, password) {
