@@ -158,7 +158,7 @@ class SignUp extends React.Component {
                 loginError: false,
                 passwordError: false,
                 repeatPasswordError: false,
-                errorText: this.props.errorMessage,
+                errorText: "No user with such login or password",
                 isSignUp: false
             });
         });
@@ -204,6 +204,7 @@ class SignUp extends React.Component {
         this.props.signup(login, password).then(() => {
             this.props.history.push('/' + login);
         }).catch((error) => {
+            console.log("SOME ERROR",  this.props.errorMessage)
             this.setState({
                 login: '',
                 password: '',
@@ -211,7 +212,7 @@ class SignUp extends React.Component {
                 loginError: false,
                 passwordError: false,
                 repeatPasswordError: false,
-                errorText: this.props.errorMessage,
+                errorText: "User with such login already exists",
                 isSignUp: true
             });
         });
