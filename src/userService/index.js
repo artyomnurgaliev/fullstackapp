@@ -304,7 +304,6 @@ const UserService = {
         });
     },
     addProject(user, project, pictures) {
-        console.log("ADDING PROJECT")
         const {name, access_level, description} = project;
         const res = axios.put(USER_API_BASE_URL + '/add_project',
             {name: name, access_level: access_level,
