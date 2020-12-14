@@ -44,7 +44,11 @@ class SignUp extends React.Component {
         } = this.state;
 
         if (this.props.loading) {
-            return (<h1>LOADING...</h1>);
+            return (
+                <form className={styles.wrapper}>
+                    <h1>LOADING...</h1>
+                </form>
+                );
         }
 
         if (!isSignUp) {
