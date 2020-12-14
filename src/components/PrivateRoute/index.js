@@ -6,6 +6,8 @@ import {withRouter} from "react-router";
 
 function PrivateRoute(props) {
     const {user, loading, ...rest} = props;
+    console.log("in private route")
+    console.log("loading", loading)
     if (loading) {
         return (<h1>LOADING...</h1>);
     }
@@ -25,11 +27,9 @@ function PrivateRoute(props) {
 }
 
 function mapStateToProps(state) {
-    const {userReducer} = state;
-
     return {
-        user: userReducer.user,
-        loading: userReducer.isFetching,
+        user: state.userReducer.user,
+        loading: state.userReducer.isFetching,
     }
 }
 

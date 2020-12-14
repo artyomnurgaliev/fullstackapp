@@ -43,6 +43,10 @@ class SignUp extends React.Component {
             isSignUp
         } = this.state;
 
+        if (this.props.loading) {
+            return (<h1>LOADING...</h1>);
+        }
+
         if (!isSignUp) {
             return (
                 <form className={styles.wrapper}>
@@ -148,8 +152,7 @@ class SignUp extends React.Component {
             password
         } = this.state;
 
-        this.props.login(login, password).then(() => {
-            this.props.history.push('/' + login);
+        this.props.login(login, password, this.props.history).then(() => {
         }).catch((error) => {
             this.setState({
                 login: '',
@@ -201,8 +204,7 @@ class SignUp extends React.Component {
             return
         }
 
-        this.props.signup(login, password).then(() => {
-            this.props.history.push('/' + login);
+        this.props.signup(login, password, this.props.history).then(() => {
         }).catch((error) => {
             console.log("SOME ERROR",  this.props.errorMessage)
             this.setState({
@@ -245,7 +247,8 @@ class SignUp extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        errorMessage: state.userReducer.error
+        errorMessage: state.userReducer.error,
+        loading: state.userReducer.isFetching,
     }
 }
 

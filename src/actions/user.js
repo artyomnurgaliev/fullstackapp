@@ -32,6 +32,7 @@ export function setUsers() {
 import userService from '../userService/index';
 
 function fetchStart() {
+    console.log("fetch start")
     return {
         type: 'USER_FETCHING'
     }
@@ -45,6 +46,7 @@ function fetchFail(payload) {
 }
 
 export function fetchSuccess(payload) {
+    console.log("fetch success")
     return {
         type: 'USER_SUCCESS',
         payload
@@ -146,11 +148,13 @@ export function getProjectAction(name) {
 }
 
 
-export function loginAction(login, password) {
+export function loginAction(login, password, history) {
     return dispatch => {
         dispatch(fetchStart());
+
         return userService.login(login, password).then((data) => {
             dispatch(fetchSuccess(data));
+            history.push('/' + login);
         })
             .catch((error) => {
                 dispatch(fetchFail(error.response.data.message));
@@ -172,11 +176,12 @@ export function logoutAction(user) {
     }
 }
 
-export function signupAction(login, password) {
+export function signupAction(login, password, history) {
     return dispatch => {
         dispatch(fetchStart());
         return userService.signup(login, password).then((data) => {
             dispatch(fetchSuccess(data));
+            history.push('/' + login);
         })
             .catch((error) => {
                 dispatch(fetchFail(error.response.data.message))
