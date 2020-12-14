@@ -13,6 +13,7 @@ class InitPage extends React.Component {
 
     render() {
         let searching = this.props.main_searching;
+        let loading = this.props.loading;
 
         let projects = this.props.search_projects;
         if (!projects) {
@@ -31,19 +32,22 @@ class InitPage extends React.Component {
                         Sign Up / Sign In</button>}
                 </div>
 
-                {searching && <div className={styles.box}><div className={styles.projects}>
-                    {projects.length === 0 && <div className={styles.add_phrase}>
-                        There are no projects here yet</div>}
-                    {projects.map(project =>
-                        <UserProject
-                            key={project.id}
-                            name={project.name}
-                            access_level={project.access_level}
-                            description={project.description}
-                            pictures={project.pictures}
-                            logged_in={false}/>)
-                    }
-                    </div></div>}
+                {searching && <div className={styles.box}>
+                    <div className={styles.projects}>
+                        {loading && <h2>LOADING...</h2>}
+                        {!loading && projects.length === 0 && <div className={styles.add_phrase}>
+                            There are no projects here yet</div>}
+                        {!loading && projects.map(project =>
+                            <UserProject
+                                key={project.id}
+                                name={project.name}
+                                access_level={project.access_level}
+                                description={project.description}
+                                pictures={project.pictures}
+                                logged_in={false}/>)
+                        }
+                    </div>
+                </div>}
 
                 {!searching && <div className={styles.text_block}>
                     <div className={styles.text}>
@@ -84,7 +88,8 @@ class InitPage extends React.Component {
 const mapStateToProps = (state) => {
     return {
         main_searching: state.userReducer.main_searching,
-        search_projects: state.userReducer.search_projects
+        search_projects: state.userReducer.search_projects,
+        loading: state.userReducer.isFetching
     }
 };
 

@@ -46,7 +46,7 @@ class SignUp extends React.Component {
         if (this.props.loading) {
             return (
                 <form className={styles.wrapper}>
-                    <h1>LOADING...</h1>
+                    <h2>LOADING...</h2>
                 </form>
                 );
         }
@@ -252,7 +252,7 @@ class SignUp extends React.Component {
 const mapStateToProps = (state) => {
     return {
         errorMessage: state.userReducer.error,
-        loading: state.userReducer.isFetching,
+        loading: state.userReducer.isFetching
     }
 }
 

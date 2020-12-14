@@ -32,7 +32,6 @@ export function setUsers() {
 import userService from '../userService/index';
 
 function fetchStart() {
-    console.log("fetch start")
     return {
         type: 'USER_FETCHING'
     }
