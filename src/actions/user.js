@@ -152,10 +152,11 @@ export function loginAction(login, password, history, cookies) {
         dispatch(fetchStart());
 
         return userService.login(login, password).then((data) => {
-            dispatch(fetchSuccess(data));
-            history.push('/' + login);
             console.log("Setting cookies");
             cookies.set("login", login, { expires: new Date(Date.now() + 1000 * 60 * 10) });
+            dispatch(fetchSuccess(data));
+            history.push('/' + login);
+
         })
             .catch((error) => {
                 dispatch(fetchFail(error.response.data.message));
@@ -179,10 +180,10 @@ export function signupAction(login, password, history, cookies) {
     return dispatch => {
         dispatch(fetchStart());
         return userService.signup(login, password).then((data) => {
-            dispatch(fetchSuccess(data));
-            history.push('/' + login);
             console.log("Setting cookies")
             cookies.set("login", login, { expires: new Date(Date.now() + 1000 * 60 * 10) })
+            dispatch(fetchSuccess(data));
+            history.push('/' + login);
         })
             .catch((error) => {
                 dispatch(fetchFail(error.response.data.message))
