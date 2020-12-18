@@ -1,34 +1,3 @@
-/*
-export function tologin(login, password, history) {
-  return {
-    type: 'LOGIN',
-    login: login,
-    password: password,
-    history: history
-  }
-}
-export function signup(login, password, history) {
-  return {
-    type: 'SIGNUP',
-    login: login,
-    password: password,
-    history: history
-  }
-}
-
-export function resetError() {
-  return {
-    type: 'RESET_ERROR',
-  }
-}
-
-export function setUsers() {
-  return {
-    type: 'SET_USERS'
-  }
-}
-*/
-
 import userService from '../userService/index';
 
 function fetchStart() {
