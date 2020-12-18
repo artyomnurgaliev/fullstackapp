@@ -19,6 +19,7 @@ class App extends React.Component {
                 logged = true
                 console.log("Logged", logged)
             }
+
             this.props.getUser(login, logged).then(() => {
             }).catch((error) => {
             });
