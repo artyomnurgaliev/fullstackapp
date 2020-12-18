@@ -1,18 +1,9 @@
-import logo from '../images/photo1.jpeg';
-import auto from '../images/auto.jpg';
-
 import axios from 'axios';
 
-import photo1 from '../images/photo1.jpeg';
-import photo2 from '../images/photo2.jpeg';
-import photo3 from '../images/photo3.jpeg';
 import default_photo from '../images/default.png';
 import User from './User';
 
-
-
 //const USER_API_BASE_URL = "http://localhost:8080/api/v1/users"
-
 const USER_API_BASE_URL = "https://achievehubbackendv1.herokuapp.com/api/v1/users"
 
 const UserService = {
