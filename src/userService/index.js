@@ -12,6 +12,7 @@ const UserService = {
         const user = axios.put(USER_API_BASE_URL + '/signup', new_user.Serialization, {params: {login: login}});
         console.log("USERRRRR", user)
         return user.then(user => {
+            console.log("SIGN UP");
             let new_user = new User();
             new_user.init = user['data'];
             new_user.Logged = true;
@@ -22,6 +23,7 @@ const UserService = {
         const user = axios.get(USER_API_BASE_URL + '/login', {params: {login: email, password: password}});
         console.log("USERRRRR", user)
         return user.then(user => {
+            console.log("LOGIN")
             let new_user = new User();
             new_user.init = user['data'];
             new_user.Logged = true;
