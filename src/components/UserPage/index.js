@@ -126,9 +126,7 @@ class UserPage extends React.Component {
 
     logout = event => {
         event.preventDefault();
-        this.props.logoutAction(this.props.user).then(() => {
-            this.props.history.push('/signup');
-        });
+        this.props.logoutAction(this.props.cookies, this.props.history);
     }
 
     _handleKeyDown = event => {
@@ -204,7 +202,7 @@ const mapDispatchToProps = (dispatch) => {
             type: 'SEARCH'
         }),
         getUserProject: (...args) => dispatch(getUserProjectAction(...args)),
-        logoutAction: (user) => dispatch(logoutAction(user))
+        logoutAction: (...args) => dispatch(logoutAction(...args))
     }
 };
 

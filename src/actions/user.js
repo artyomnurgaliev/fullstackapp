@@ -114,10 +114,10 @@ export function setUserInfoAction(user) {
 }
 
 
-export function getUserAction(login) {
+export function getUserAction(login, logged) {
     return dispatch => {
         dispatch(fetchStart());
-        return userService.getUser(login).then((data) => {
+        return userService.getUser(login, logged).then((data) => {
             dispatch(fetchSuccess(data));
         })
             .catch((error) => {
@@ -147,13 +147,14 @@ export function getProjectAction(name) {
 }
 
 
-export function loginAction(login, password, history) {
+export function loginAction(login, password, history, cookies) {
     return dispatch => {
         dispatch(fetchStart());
 
         return userService.login(login, password).then((data) => {
             dispatch(fetchSuccess(data));
             history.push('/' + login);
+            cookies.set("login", login, { expires: new Date(Date.now() + 1000 * 60 * 10) });
         })
             .catch((error) => {
                 dispatch(fetchFail(error.response.data.message));
@@ -162,25 +163,23 @@ export function loginAction(login, password, history) {
     }
 }
 
-export function logoutAction(user) {
+export function logoutAction(cookies, history) {
     return dispatch => {
         dispatch(fetchStart());
-        return userService.logout(user).then((data) => {
-            dispatch(fetchSuccess(data));
-        })
-            .catch((error) => {
-                dispatch(fetchFail(error.response.data.message))
-                throw Error(error)
-            });
+        cookies.set("login", "undefined");
+        dispatch(fetchSuccess(null));
+        console.log("Logged out");
+        history.push('/signup');
     }
 }
 
-export function signupAction(login, password, history) {
+export function signupAction(login, password, history, cookies) {
     return dispatch => {
         dispatch(fetchStart());
         return userService.signup(login, password).then((data) => {
             dispatch(fetchSuccess(data));
             history.push('/' + login);
+            cookies.set("login", login, { expires: new Date(Date.now() + 1000 * 60 * 10) })
         })
             .catch((error) => {
                 dispatch(fetchFail(error.response.data.message))

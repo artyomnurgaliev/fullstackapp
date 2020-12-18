@@ -12,6 +12,8 @@ class InitPage extends React.Component {
     };
 
     render() {
+        const {cookies} = this.props
+
         let searching = this.props.main_searching;
         let loading = this.props.loading;
 
@@ -58,7 +60,7 @@ class InitPage extends React.Component {
                             This site is created for you. Now you can store all your projects in one place
                         </div>
                     </div>
-                    <SignUp/>
+                    <SignUp cookies={cookies} />
                 </div>}
             </div>
         );

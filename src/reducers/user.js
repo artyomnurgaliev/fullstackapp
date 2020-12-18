@@ -91,7 +91,7 @@ const userReducer = (state = initialState, action) => {
                 ...state,
                 isFetching: false,
                 error: null,
-                user: action.payload.user
+                user: action.payload ? action.payload.user : null
             };
         default:
             return state;

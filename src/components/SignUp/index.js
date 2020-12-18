@@ -17,6 +17,7 @@ function isCorrectPassword(password) {
 }
 
 class SignUp extends React.Component {
+
     static propTypes = {
         match: PropTypes.object.isRequired,
         location: PropTypes.object.isRequired,
@@ -156,7 +157,7 @@ class SignUp extends React.Component {
             password
         } = this.state;
 
-        this.props.login(login, password, this.props.history).then(() => {
+        this.props.login(login, password, this.props.history, this.props.cookies).then(() => {
         }).catch((error) => {
             this.setState({
                 login: '',
@@ -208,7 +209,7 @@ class SignUp extends React.Component {
             return
         }
 
-        this.props.signup(login, password, this.props.history).then(() => {
+        this.props.signup(login, password, this.props.history, this.props.cookies).then(() => {
         }).catch((error) => {
             console.log("SOME ERROR",  this.props.errorMessage)
             this.setState({
@@ -260,6 +261,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         signup: (...args) => dispatch(signupAction(...args)),
         login: (...args) => dispatch(loginAction(...args)),
+
     }
 };
 
