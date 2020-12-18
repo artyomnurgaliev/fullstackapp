@@ -154,6 +154,7 @@ export function loginAction(login, password, history, cookies) {
         return userService.login(login, password).then((data) => {
             dispatch(fetchSuccess(data));
             history.push('/' + login);
+            console.log("Setting cookies");
             cookies.set("login", login, { expires: new Date(Date.now() + 1000 * 60 * 10) });
         })
             .catch((error) => {
@@ -166,6 +167,7 @@ export function loginAction(login, password, history, cookies) {
 export function logoutAction(cookies, history) {
     return dispatch => {
         dispatch(fetchStart());
+        console.log("Setting cookies")
         cookies.set("login", "undefined");
         dispatch(fetchSuccess(null));
         console.log("Logged out");
@@ -179,6 +181,7 @@ export function signupAction(login, password, history, cookies) {
         return userService.signup(login, password).then((data) => {
             dispatch(fetchSuccess(data));
             history.push('/' + login);
+            console.log("Setting cookies")
             cookies.set("login", login, { expires: new Date(Date.now() + 1000 * 60 * 10) })
         })
             .catch((error) => {
